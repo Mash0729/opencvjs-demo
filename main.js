@@ -92,4 +92,5 @@ clearButton.addEventListener("click", () => {
   imageInput.value = "";
   dispInput.innerHTML = "";
   dispOutput.innerHTML = "";
+  targetImage = null;
 })
