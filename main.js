@@ -1,13 +1,17 @@
 const imageInput = document.getElementById("imageInput");
 const procButton = document.getElementById("procButton");
 const clearButton = document.getElementById("clearButton");
+const downloadButton = document.getElementById("downloadButton");
 const dispInput = document.getElementById("dispInput");
 const dispOutput = document.getElementById("dispOutput");
 
+let resultCanvas = null;
 let targetImage = null;
 
 // リロード時にinputを初期化
 imageInput.value = "";
+// ダウンロードボタンは出力結果表示時以外は無効にする
+downloadButton.disabled = true;
 
 // 画像読み込み
 imageInput.addEventListener("change", (e) => {
@@ -72,9 +76,11 @@ procButton.addEventListener("click", () => {
 
     // 処理結果表示
     dispOutput.innerHTML = "";
-    const canvas = document.createElement("canvas");
-    dispOutput.appendChild(canvas);
-    cv.imshow(canvas, dst);
+    resultCanvas = document.createElement("canvas");
+    dispOutput.appendChild(resultCanvas);
+    cv.imshow(resultCanvas, dst);
+    
+    downloadButton.disabled = false;
   } catch (err) {
     console.error(err);
   } finally {
@@ -93,4 +99,14 @@ clearButton.addEventListener("click", () => {
   dispInput.innerHTML = "";
   dispOutput.innerHTML = "";
   targetImage = null;
+  resultCanvas = null;
+  downloadButton.disabled = true;
+})
+
+// ダウンロードボタン押下時
+downloadButton.addEventListener("click", () => {
+  const link = document.createElement("a");
+  link.href = resultCanvas.toDataURL("image/jpeg");
+  link.download = "result.jpg";
+  link.click();
 })
