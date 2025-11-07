@@ -32,6 +32,11 @@ imageInput.addEventListener("change", (e) => {
 
 // 実行ボタン押下時
 procButton.addEventListener("click", () => {
+  let src;
+  let floatSrc;
+  let mat;
+  let floatDst;
+  let dst;
   try {
     // 画質劣化防止のために元画像の解像度のcanvasを作成
     const fullCanvas = document.createElement("canvas");
@@ -42,11 +47,11 @@ procButton.addEventListener("click", () => {
     ctx.drawImage(targetImage, 0, 0, fullCanvas.width, fullCanvas.height);
 
     // Mat形式で画像を保持
-    const src = cv.imread(fullCanvas);
+    src = cv.imread(fullCanvas);
 
     // 32bit-floatへの一時的な変換
     // CV_8Uのままではクリッピングが起こる
-    const floatSrc = new cv.Mat();
+    floatSrc = new cv.Mat();
     src.convertTo(floatSrc, cv.CV_32F);
 
     // セピア化用の行列
@@ -57,12 +62,12 @@ procButton.addEventListener("click", () => {
       0.272, 0.534, 0.131, 0,
       0, 0, 0, 1,
     ];
-    const mat = cv.matFromArray(4, 4, cv.CV_32F, sepiaMatrix);
-    const floatDst = new cv.Mat();
+    mat = cv.matFromArray(4, 4, cv.CV_32F, sepiaMatrix);
+    floatDst = new cv.Mat();
     cv.transform(floatSrc, floatDst, mat);
 
     // 表示用に8bit符号なし整数型に戻す
-    const dst = new cv.Mat();
+    dst = new cv.Mat();
     floatDst.convertTo(dst, cv.CV_8U);
 
     // 処理結果表示
@@ -72,6 +77,13 @@ procButton.addEventListener("click", () => {
     cv.imshow(canvas, dst);
   } catch (err) {
     console.error(err);
+  } finally {
+    // cv.MatなどのインスタンスにはGCが効かないのでメモリ解放を自分で行う
+    if(src) src.delete();
+    if(floatSrc) floatSrc.delete();
+    if(mat) mat.delete();
+    if(floatDst) floatDst.delete();
+    if(dst) dst.delete();
   }
 });
 
