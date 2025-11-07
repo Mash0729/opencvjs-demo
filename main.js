@@ -27,7 +27,7 @@ imageInput.addEventListener("change", (e) => {
   reader.readAsDataURL(file);
 });
 
-// 開始ボタン押下時
+// 実行ボタン押下時
 procButton.addEventListener("click", () => {
   try {
     // 画質劣化防止のために元画像の解像度のcanvasを作成
