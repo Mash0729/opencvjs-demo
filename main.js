@@ -1,5 +1,6 @@
 const imageInput = document.getElementById("imageInput");
 const procButton = document.getElementById("procButton");
+const clearButton = document.getElementById("clearButton");
 const dispInput = document.getElementById("dispInput");
 const dispOutput = document.getElementById("dispOutput");
 
@@ -70,3 +71,9 @@ procButton.addEventListener("click", () => {
     console.error(err);
   }
 });
+
+// クリアボタン押下時
+clearButton.addEventListener("click", () => {
+  dispInput.innerHTML = "";
+  dispOutput.innerHTML = "";
+})
